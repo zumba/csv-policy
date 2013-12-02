@@ -323,7 +323,7 @@ class Validator {
 	 * @param string $enclosure
 	 * @return \CsvValidator\Validator current instance
 	 */
-	public function setEnclosure($enclosure = ','){
+	public function setEnclosure($enclosure = '"'){
 		$this->enclosure = $enclosure;
 		return $this;
 	}
@@ -335,7 +335,7 @@ class Validator {
 	 * @param string $escape
 	 * @return \CsvValidator\Validator current instance
 	 */
-	public function setEscape($escape = ','){
+	public function setEscape($escape = '\\'){
 		$this->escape = $escape;
 		return $this;
 	}
