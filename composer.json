@@ -16,7 +16,8 @@
         }
     ],
     "require": {
-        "php": ">=5.3.10"
+        "php": ">=5.3.10",
+        "doctrine/inflector" : "~1.0"
     },
     "autoload": {
         "psr-0": {
