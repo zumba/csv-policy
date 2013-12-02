@@ -1,5 +1,5 @@
 <?php
-namespace CsvValidator\Rule;
+namespace Zumba\CsvValidator\Rule;
 
 abstract class AbstractRule {
 

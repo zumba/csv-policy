@@ -1,6 +1,6 @@
 <?php
 
-namespace CsvValidator;
+namespace Zumba\CsvValidator;
 
 use Doctrine\Common\Inflector\Inflector;
 
