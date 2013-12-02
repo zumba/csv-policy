@@ -2,6 +2,8 @@
 
 namespace CsvValidator;
 
+use Doctrine\Common\Inflector\Inflector;
+
 /**
  * Csv Validation Class
  *
@@ -149,7 +151,7 @@ class Validator {
 	 */
 	public function config($options) {
 		foreach($options as $key => $config){
-			$method = 'set' . \Inflector::camelize($key);
+			$method = 'set' . Inflector::classify($key);
 			if (method_exists($this, $method)) {
 				$this->$method($config);
 			}
@@ -192,9 +194,9 @@ class Validator {
 	 */
 	protected function loadRules(array $row, $file){
 		$info = pathinfo($file);
-		$namespace = \Inflector::classify($info['filename']);
+		$namespace = Inflector::classify($info['filename']);
 		foreach ($row as $key => $value) {
-			$name = \Inflector::classify($value);
+			$name = Inflector::classify($value);
 			$filename = implode('/', array(
 				$this->rulesPath, 'CsvValidator', 'Rule', $namespace, $name . '.php'
 			));
