@@ -21,7 +21,8 @@
     },
     "autoload": {
         "psr-0": {
-            "Zumba\\CsvValidator": "src/"
+            "Zumba\\CsvValidator": "src/",
+            "Zumba\\CsvValidator\\Test": "tests/"
         }
     }
 }
