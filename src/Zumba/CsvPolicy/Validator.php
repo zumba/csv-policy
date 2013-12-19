@@ -113,23 +113,12 @@ class Validator {
 		if(empty($this->errors)) {
 
 			$this->loadRules($row, $file);
-
-			$columnCount = count($this->columnIndexes);
-
 			while(($data = $this->fgetcsv($handle)) !== false) {
-
-				$errors = [];
-				foreach ($data as $key => $value) {
-					if($key >= $columnCount) {
-						break;
+				while(($params = each($data))) {
+					call_user_func_array([$this, 'checkRule'], array_unique($params));
+					if (!empty($this->errors)){
+						break 2;
 					}
-					$value = trim($value);
-					if(isset($this->rules[$key]) && !$this->rules[$key]->validate($value)){
-						$this->errors[] = $this->rules[$key]->getErrorMessage($value);
-					}
-				}
-				if (!empty($this->errors)){
-					break;
 				}
 			}
 		}
@@ -167,6 +156,26 @@ class Validator {
 			count(array_intersect($and, $row)) !== count($and)
 		){
 			$this->logMissingRequiredFields($row, $and, $or);
+		}
+	}
+
+	/**
+	 * Checks if a rule for the $key exists and validates.
+	 *
+	 * Logs errors from the rule if invalid.
+	 *
+	 * @access protected
+	 * @param mixed $value
+	 * @param string $key
+	 * @return void
+	 */
+	protected function checkRule($value, $key){
+		$value = trim($value);
+		if(isset($this->rules[$key])) {
+			$rule = $this->rules[$key];
+		 	if (!$rule->validate($value)){
+				$this->errors[] = $rule->getErrorMessage($value);
+			}
 		}
 	}
 
