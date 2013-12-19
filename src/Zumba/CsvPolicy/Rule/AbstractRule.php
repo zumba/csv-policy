@@ -46,10 +46,11 @@ abstract class AbstractRule {
 	 *
 	 * @access public
 	 * @param mixed $input
-	 * @return void
+	 * @return boolean
 	 */
 	public function validate($input) {
 		$this->tokens[] = $input;
+		return true;
 	}
 
 	/**
