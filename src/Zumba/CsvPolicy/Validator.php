@@ -202,11 +202,11 @@ class Validator {
 		foreach ($row as $key => $value) {
 			$name = Inflector::classify($value);
 			$filename = implode('/', array(
-				$this->rulesPath, 'CsvPolicy', 'Rule', $namespace, $name . '.php'
+				$this->rulesPath, 'Zumba', 'CsvPolicy', 'Rule', $namespace, $name . '.php'
 			));
 			if (file_exists($filename)){
 				require_once $filename;
-				$Rule = implode('\\',  array('\\CsvPolicy\\Rule', $namespace, $name));
+				$Rule = implode('\\',  array('\\Zumba\\CsvPolicy\\Rule', $namespace, $name));
 				if(class_exists($Rule)) {
 					$this->rules[$key] = new $Rule();
 				}
