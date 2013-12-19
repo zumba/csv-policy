@@ -270,10 +270,10 @@ class Validator {
 			$requiredCount = count($required);
 
 			// Fields that must all be present
-			$and = array_filter($required, function($element){ return !is_array($element); });
+			$and = array_filter($required, 'is_string');
 
 			// Fields where at least one must be present
-			$or = array_filter($required, function($element){ return is_array($element); });
+			$or = array_filter($required, 'is_array');
 
 			// The following large condition checks if required fields are not
 			// present and logs the errors
