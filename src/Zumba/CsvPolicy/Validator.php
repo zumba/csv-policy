@@ -285,7 +285,7 @@ class Validator {
 				$Rule = str_replace('/', '\\', $relativePath);
 				$this->loadRule($key, $Rule);
 			}
-			$this->columnIndexes[] = $value;
+			$this->columnIndexes[$key] = $value;
 		}
 	}
 
