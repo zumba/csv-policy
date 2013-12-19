@@ -295,7 +295,7 @@ class Validator {
 	 * @access protected
 	 * @param array $row
 	 * @param array $and
-	 * @param array $row
+	 * @param array $or
 	 * @return void
 	 */
 	protected function logMissingRequiredFields(array $row, array $and = [], array $or = []) {
