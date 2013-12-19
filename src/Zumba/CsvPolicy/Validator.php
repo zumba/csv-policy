@@ -207,6 +207,7 @@ class Validator {
 	 * @access public
 	 * @param Resource $handle
 	 * @return array|null|false
+	 * @throws \InvalidArgumentException If $handle is not a valid resource
 	 */
 	public function fgetcsv($handle){
 		$result = fgetcsv($handle, 0, $this->delimiter, $this->enclosure, $this->escape);
