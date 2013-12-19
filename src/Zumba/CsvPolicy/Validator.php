@@ -137,6 +137,40 @@ class Validator {
 	}
 
 	/**
+	 * Verifies that required fields are all present and logs errors if missing.
+	 *
+	 * @access protected
+	 * @param array $row
+	 * @return void
+	 */
+	protected function checkRequiredFields(array $row){
+		$required = $this->requiredFields;
+
+		// Fields that must all be present
+		$and = array_filter($required, 'is_string');
+
+		// Fields where at least one must be present
+		$or = array_filter($required, 'is_array');
+
+		/**
+		 * The following block checks if required fields are all present
+		 * and logs any errors errors
+		 */
+		if (
+			// number of fields is less than the required count
+			count($row) < count($required) ||
+
+			// $or fields are required, but not present
+			(($orFieldsExist = !empty($or)) && !$this->orFieldsValid($or, $row)) ||
+
+			// remaining fields are not present
+			count(array_intersect($and, $row)) !== count($and)
+		){
+			$this->logMissingRequiredFields($row, $and, $or);
+		}
+	}
+
+	/**
 	 * Configuration method
 	 *
 	 * options:
@@ -216,6 +250,39 @@ class Validator {
 	}
 
 	/**
+	 * Logs missing required fields
+	 *
+	 * @access protected
+	 * @param array $row
+	 * @param array $and
+	 * @param array $row
+	 * @return void
+	 */
+	protected function logMissingRequiredFields(array $row, array $and = [], array $or = []) {
+		if (!empty($and)){
+			$required = implode('", "', array_diff($and, $row));
+			if (!empty($required)){
+				$this->errors[] = sprintf(
+					'The following missing columns are required: "%s".',
+					$required
+				);
+			}
+		}
+		if(!empty($or)){
+			$logOrError = function($fields) use ($row){
+				$diff = array_diff($fields, $row);
+				if (!count($diff)){
+					$this->errors[] = sprintf(
+						'At least one of the following columns is required: "%s".',
+						implode($diff, '", "')
+					);
+				}
+			};
+			array_walk($or, $logOrError->bindTo($this));
+		}
+	}
+
+	/**
 	 * Normalizes the data in a row.
 	 *
 	 * @access protected
@@ -265,45 +332,7 @@ class Validator {
 		}
 
 		if(empty($this->errors)) {
-			$required = $this->requiredFields;
-			$columnCount = count($row);
-			$requiredCount = count($required);
-
-			// Fields that must all be present
-			$and = array_filter($required, 'is_string');
-
-			// Fields where at least one must be present
-			$or = array_filter($required, 'is_array');
-
-			// The following large condition checks if required fields are not
-			// present and logs the errors
-			if (
-				// number of fields is less than the required count
-				$columnCount < $requiredCount ||
-
-				// $or fields are required, but not present
-				(!empty($or) && !$this->orFieldsValid($or, $row)) ||
-
-				// remaining fields are not present
-				count(array_intersect($and, $row)) !== count($and)
-			){
-				$required = implode(array_diff($and, $row), '", "');
-				if (!empty($required)){
-					$this->errors[] = sprintf(
-						'The following missing columns are required: "%s".',
-						$required
-					);
-				}
-				foreach($or as $fields){
-					if (count(array_intersect($fields, $row)) === 0){
-						$required = implode(array_diff($fields, $row), '", "');
-						$this->errors[] = sprintf(
-							'At least one of the following columns is required: "%s".',
-							$required
-						);
-					}
-				}
-			}
+			$this->checkRequiredFields($row);
 		}
 		return $row;
 	}
