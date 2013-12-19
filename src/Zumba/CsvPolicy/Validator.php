@@ -19,7 +19,7 @@ class Validator {
 	 * @access protected
 	 * @var array
 	 */
-	protected $columnIndexes = array();
+	protected $columnIndexes = [];
 
 	/**
 	 * Delimiter character
@@ -43,7 +43,7 @@ class Validator {
 	 * @access protected
 	 * @var array
 	 */
-	protected $errors = array();
+	protected $errors = [];
 
 	/**
 	 * Escape character
@@ -59,7 +59,7 @@ class Validator {
 	 * @access protected
 	 * @var array
 	 */
-	protected $requiredFields = array();
+	protected $requiredFields = [];
 
 	/**
 	 * Collection of rules objects
@@ -67,7 +67,7 @@ class Validator {
 	 * @access protected
 	 * @var array
 	 */
-	protected $rules = array();
+	protected $rules = [];
 
 	/**
 	 * The location of the rule class files.
@@ -91,7 +91,7 @@ class Validator {
 	 * @access public
 	 * @param array $config
 	 */
-	public function __construct(array $config = array()) {
+	public function __construct(array $config = []) {
 		$this->config($config);
 	}
 
@@ -118,7 +118,7 @@ class Validator {
 
 			while(($data = fgetcsv($handle, 0, $delimiter, $enclosure, $escape)) !== false) {
 
-				$errors = array();
+				$errors = [];
 				foreach ($data as $key => $value) {
 					if($key >= $columnCount) {
 						break;
@@ -201,12 +201,12 @@ class Validator {
 		$namespace = Inflector::classify($info['filename']);
 		foreach ($row as $key => $value) {
 			$name = Inflector::classify($value);
-			$filename = implode('/', array(
+			$filename = implode('/', [
 				$this->rulesPath, 'Zumba', 'CsvPolicy', 'Rule', $namespace, $name . '.php'
-			));
+			]);
 			if (file_exists($filename)){
 				require_once $filename;
-				$Rule = implode('\\',  array('\\Zumba\\CsvPolicy\\Rule', $namespace, $name));
+				$Rule = implode('\\',  ['\\Zumba\\CsvPolicy\\Rule', $namespace, $name]);
 				if(class_exists($Rule)) {
 					$this->rules[$key] = new $Rule();
 				}
@@ -351,7 +351,7 @@ class Validator {
 	 * @param array $requiredFields
 	 * @return \Zumba\CsvPolicy\Validator instance
 	 */
-	public function setRequiredFields(array $requiredFields = array()){
+	public function setRequiredFields(array $requiredFields = []){
 		$this->requiredFields = $requiredFields;
 		return $this;
 	}

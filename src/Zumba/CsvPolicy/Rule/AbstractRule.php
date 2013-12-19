@@ -14,7 +14,7 @@ abstract class AbstractRule {
 	 * @access protected
 	 * @var array
 	 */
-    protected $tokens = array();
+    protected $tokens = [];
 
     /**
      * Returns the inputs that have been validated against
