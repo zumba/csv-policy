@@ -35,13 +35,10 @@ abstract class AbstractRule {
      * @return boolean
      */
 	protected function isUnique($input){
-
-		// $input has already been stored in the tokens array, so we need to
-		// reduce it to ensure that there is only one occurance,
-		// instead of using something like array_unique, for eaxample.
-		return array_reduce($this->tokens, function($v, $n) use ($input) {
-			return $v + (int)($n === $input);
-		}, 0) === 1;
+        $sumOccurrences = function($v, $n){
+            return $v + (int)($n === $this->scalar);
+        };
+		return array_reduce($this->tokens, $sumOccurrences->bindTo((object)$input), 0) === 1;
 	}
 
     /**
