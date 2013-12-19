@@ -200,7 +200,11 @@ class Validator {
 	 * @return array|null|false
 	 */
 	public function fgetcsv($handle){
-		return fgetcsv($handle, 0, $this->delimiter, $this->enclosure, $this->escape);
+		$result = fgetcsv($handle, 0, $this->delimiter, $this->enclosure, $this->escape);
+		if ($result === null){
+			throw new \InvalidArgumentException('File pointer resource used in fgetcsv is invalid');
+		}
+		return $result;
 	}
 
 	/**
