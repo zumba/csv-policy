@@ -223,6 +223,21 @@ class Validator {
 	}
 
 	/**
+	 * Instantiates and loads a single rule into the Validator::$rules array
+	 *
+	 * @access protected
+	 * @param string $Rule A fully qualified class name
+	 * @return void
+	 */
+	protected function loadRule($Rule){
+		if(class_exists($Rule)) {
+			$this->rules[$key] = new $Rule();
+		} else {
+			$this->errors[] = sprintf('Rule file found, but could not load rule class: "%s".', $Rule);
+		}
+	}
+
+	/**
 	 * Loads all of the rule validators
 	 *
 	 * @access protected
@@ -233,19 +248,18 @@ class Validator {
 	protected function loadRules(array $row, $file){
 		$info = pathinfo($file);
 		$namespace = Inflector::classify($info['filename']);
-		foreach ($row as $key => $value) {
+		$rulesPath = $this->rulesPath;
+
+		foreach ($row as $value) {
 			$name = Inflector::classify($value);
 			$relativePath = "/Zumba/CsvPolicy/Rule/$namespace/$name";
 			$filename = $this->rulesPath . $relativePath . '.php';
 			if (file_exists($filename)){
 				require_once $filename;
 				$Rule = str_replace('/', '\\', $relativePath);
-
-				if(class_exists($Rule)) {
-					$this->rules[$key] = new $Rule();
-				}
+				$this->loadRule($Rule);
 			}
-			$this->columnIndexes[$key] = $value;
+			$this->columnIndexes[] = $value;
 		}
 	}
 
