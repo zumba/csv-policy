@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "112f888b0dc0905eae53e92cee3200a4",
+    "hash": "493b800ac98983a224835a9fef2ed99d",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -81,7 +81,7 @@
 
     ],
     "platform": {
-        "php": ">=5.3.10"
+        "php": ">=5.4"
     },
     "platform-dev": [
 
