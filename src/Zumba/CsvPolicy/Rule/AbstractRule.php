@@ -1,6 +1,11 @@
 <?php
 namespace Zumba\CsvPolicy\Rule;
 
+/**
+ * CsvPolicy AbstractRule Class
+ *
+ * @abstract
+ */
 abstract class AbstractRule {
 
 	/**
@@ -25,7 +30,7 @@ abstract class AbstractRule {
     /**
      * Checks if the input has been parsed before
      *
-     *
+     * @access protected
      * @param mixed $input
      * @return boolean
      */
@@ -53,6 +58,10 @@ abstract class AbstractRule {
     /**
      * Get the error message regarding this rule
      *
+     * Is passed the currently offending value
+     *
+     * @abstract
+     * @access public
      * @param $input string
      * @return string
      */

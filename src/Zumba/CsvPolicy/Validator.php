@@ -5,7 +5,7 @@ namespace Zumba\CsvPolicy;
 use Doctrine\Common\Inflector\Inflector;
 
 /**
- * Csv Validation Class
+ * CsvPolicy Validation Class
  *
  * Based loosely on these:
  *  * https://github.com/javilumbrales/csv_file_validation
@@ -98,9 +98,9 @@ class Validator {
 	/**
 	 * Iterates over the csv, checking rules
 	 *
-	 * @access  protected
+	 * @access protected
 	 * @param string $file
-	 * @return [type]
+	 * @return void
 	 */
 	protected function analyze($file){
 		$handle = fopen($file, 'r');
@@ -140,14 +140,14 @@ class Validator {
 	 * Configuration method
 	 *
 	 * options:
-	 * * delimiter string
-	 * * enclosure string
-	 * * escape string
-	 * * requiredFields array
+	 * * string delimiter
+	 * * string enclosure
+	 * * string escape
+	 * * array requiredFields
 	 *
 	 * @access public
 	 * @param array $options
-	 * @return
+	 * @return void
 	 */
 	public function config($options) {
 		foreach($options as $key => $config){
@@ -161,6 +161,8 @@ class Validator {
 	/**
 	 * Return the array of errors
 	 *
+	 * @access public
+	 * @param void
 	 * @return array
 	 */
 	public function getErrors() {
@@ -168,7 +170,9 @@ class Validator {
 	}
 
 	/**
-	 * Exits if/when an error is found
+	 * Checks a CSV file for validity based on defined policies.
+	 *
+	 * Stops on the first violation
 	 *
 	 * @access public
 	 * @param string $file Full path
@@ -309,7 +313,7 @@ class Validator {
 	 *
 	 * @access public
 	 * @param string $delimiter
-	 * @return \CsvPolicy\Validator current instance
+	 * @return \Zumba\CsvPolicy\Validator instance
 	 */
 	public function setDelimiter($delimiter = ','){
 		$this->delimiter = $delimiter;
@@ -321,7 +325,7 @@ class Validator {
 	 *
 	 * @access public
 	 * @param string $enclosure
-	 * @return \CsvPolicy\Validator current instance
+	 * @return \Zumba\CsvPolicy\Validator instance
 	 */
 	public function setEnclosure($enclosure = '"'){
 		$this->enclosure = $enclosure;
@@ -333,7 +337,7 @@ class Validator {
 	 *
 	 * @access public
 	 * @param string $escape
-	 * @return \CsvPolicy\Validator current instance
+	 * @return \Zumba\CsvPolicy\Validator instance
 	 */
 	public function setEscape($escape = '\\'){
 		$this->escape = $escape;
@@ -345,7 +349,7 @@ class Validator {
 	 *
 	 * @access public
 	 * @param array $requiredFields
-	 * @return \CsvPolicy\Validator current instance
+	 * @return \Zumba\CsvPolicy\Validator instance
 	 */
 	public function setRequiredFields(array $requiredFields = array()){
 		$this->requiredFields = $requiredFields;
@@ -357,7 +361,7 @@ class Validator {
 	 *
 	 * @access public
 	 * @param String $path
-	 * @return \CsvPolicy\Validator current instance
+	 * @return \Zumba\CsvPolicy\Validator instance
 	 */
 	public function setRulesPath($path) {
 		$this->rulesPath = $path;
