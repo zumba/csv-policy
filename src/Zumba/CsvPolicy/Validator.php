@@ -115,7 +115,7 @@ class Validator {
 			$this->loadRules($row, $file);
 			while(($data = $this->fgetcsv($handle)) !== false) {
 				while(($params = each($data))) {
-					call_user_func_array([$this, 'checkRule'], array_unique($params));
+					$this->checkRule($params);
 					if (!empty($this->errors)){
 						break 2;
 					}
@@ -160,17 +160,17 @@ class Validator {
 	}
 
 	/**
-	 * Checks if a rule for the $key exists and validates.
+	 * Checks if a rule for the $params['key'] exists and validates.
 	 *
 	 * Logs errors from the rule if invalid.
 	 *
 	 * @access protected
-	 * @param mixed $value
-	 * @param string $key
+	 * @param array $params ['key' => ?, 'value' => ?]
 	 * @return void
 	 */
-	protected function checkRule($value, $key){
-		$value = trim($value);
+	protected function checkRule(array $params){
+		$value = trim($params['value']);
+		$key = $params['key'];
 		if(isset($this->rules[$key])) {
 			$rule = $this->rules[$key];
 		 	if (!$rule->validate($value)){
