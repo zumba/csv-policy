@@ -1,5 +1,5 @@
 <?php
 
-namespace Zumba\CsvValidator\Test;
+namespace Zumba\CsvPolicy\Test;
 
 class TestCase extends \PHPUnit_Framework_TestCase { }

@@ -12,7 +12,7 @@
 		 colors="true">
 	<testsuites>
 		<testsuite>
-			<directory>./tests/Zumba/CsvValidator</directory>
+			<directory>./tests/Zumba/CsvPolicy</directory>
 		</testsuite>
 	</testsuites>
 	<filter>

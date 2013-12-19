@@ -1,9 +1,9 @@
 {
-    "name": "zumba/csv-validator",
+    "name": "zumba/csv-policy",
     "type": "library",
     "version": "0.0.1",
-    "description": "Simple, rules-driven csv validation",
-    "keywords": ["csv", "validator"],
+    "description": "Simple, policy-driven csv rules validation",
+    "keywords": ["csv", "validator", "policy", "csv-policy"],
     "homepage": "http://engineering.zumba.com",
     "license": "MIT",
     "authors": [
@@ -21,8 +21,8 @@
     },
     "autoload": {
         "psr-0": {
-            "Zumba\\CsvValidator": "src/",
-            "Zumba\\CsvValidator\\Test": "tests/"
+            "Zumba\\CsvPolicy": "src/",
+            "Zumba\\CsvPolicy\\Test": "tests/"
         }
     }
 }

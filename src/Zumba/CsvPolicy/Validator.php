@@ -1,6 +1,6 @@
 <?php
 
-namespace Zumba\CsvValidator;
+namespace Zumba\CsvPolicy;
 
 use Doctrine\Common\Inflector\Inflector;
 
@@ -72,10 +72,10 @@ class Validator {
 	/**
 	 * The location of the rule class files.
 	 *
-	 * This should be an absolute path to the directory containing your `CsvValidator/Rule`
+	 * This should be an absolute path to the directory containing your `CsvPolicy/Rule`
 	 * directory, without a trailing slash. For example, the path for the following rule file:
 	 *
-	 * /Users/you/project/app/Lib/CsvValidator/Rule/SomeFile/SomeRule.php
+	 * /Users/you/project/app/Lib/CsvPolicy/Rule/SomeFile/SomeRule.php
 	 *
 	 * should be:
 	 *
@@ -198,11 +198,11 @@ class Validator {
 		foreach ($row as $key => $value) {
 			$name = Inflector::classify($value);
 			$filename = implode('/', array(
-				$this->rulesPath, 'CsvValidator', 'Rule', $namespace, $name . '.php'
+				$this->rulesPath, 'CsvPolicy', 'Rule', $namespace, $name . '.php'
 			));
 			if (file_exists($filename)){
 				require_once $filename;
-				$Rule = implode('\\',  array('\\CsvValidator\\Rule', $namespace, $name));
+				$Rule = implode('\\',  array('\\CsvPolicy\\Rule', $namespace, $name));
 				if(class_exists($Rule)) {
 					$this->rules[$key] = new $Rule();
 				}
@@ -309,7 +309,7 @@ class Validator {
 	 *
 	 * @access public
 	 * @param string $delimiter
-	 * @return \CsvValidator\Validator current instance
+	 * @return \CsvPolicy\Validator current instance
 	 */
 	public function setDelimiter($delimiter = ','){
 		$this->delimiter = $delimiter;
@@ -321,7 +321,7 @@ class Validator {
 	 *
 	 * @access public
 	 * @param string $enclosure
-	 * @return \CsvValidator\Validator current instance
+	 * @return \CsvPolicy\Validator current instance
 	 */
 	public function setEnclosure($enclosure = '"'){
 		$this->enclosure = $enclosure;
@@ -333,7 +333,7 @@ class Validator {
 	 *
 	 * @access public
 	 * @param string $escape
-	 * @return \CsvValidator\Validator current instance
+	 * @return \CsvPolicy\Validator current instance
 	 */
 	public function setEscape($escape = '\\'){
 		$this->escape = $escape;
@@ -345,7 +345,7 @@ class Validator {
 	 *
 	 * @access public
 	 * @param array $requiredFields
-	 * @return \CsvValidator\Validator current instance
+	 * @return \CsvPolicy\Validator current instance
 	 */
 	public function setRequiredFields(array $requiredFields = array()){
 		$this->requiredFields = $requiredFields;
@@ -357,7 +357,7 @@ class Validator {
 	 *
 	 * @access public
 	 * @param String $path
-	 * @return \CsvValidator\Validator current instance
+	 * @return \CsvPolicy\Validator current instance
 	 */
 	public function setRulesPath($path) {
 		$this->rulesPath = $path;

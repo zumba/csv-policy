@@ -1,2 +1,2 @@
-CsvValidator
+CsvPolicy
 ============

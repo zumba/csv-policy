@@ -1,9 +1,9 @@
 <?php
 
-namespace Zumba\CsvValidator\Test\Validator;
+namespace Zumba\CsvPolicy\Test\Validator;
 
-use \Zumba\CsvValidator\Test\TestCase,
-	\Zumba\CsvValidator\Validator;
+use \Zumba\CsvPolicy\Test\TestCase,
+	\Zumba\CsvPolicy\Validator;
 
 /**
  * @group validator
