@@ -279,7 +279,7 @@ class Validator {
 		foreach ($row as $key => $value) {
 			$name = Inflector::classify($value);
 			$relativePath = "/Zumba/CsvPolicy/Rule/$namespace/$name";
-			$filename = $this->rulesPath . $relativePath . '.php';
+			$filename = $rulesPath . $relativePath . '.php';
 			if (file_exists($filename)){
 				require_once $filename;
 				$Rule = str_replace('/', '\\', $relativePath);
