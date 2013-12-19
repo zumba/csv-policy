@@ -109,14 +109,14 @@ class Validator {
 		$escape = $this->escape;
 
 		//Parse the first row, instantiate all the validators
-		$row = $this->parseFirstRow(fgetcsv($handle, 0, $delimiter, $enclosure, $escape));
+		$row = $this->parseFirstRow($this->fgetcsv($handle));
 		if(empty($this->errors)) {
 
 			$this->loadRules($row, $file);
 
 			$columnCount = count($this->columnIndexes);
 
-			while(($data = fgetcsv($handle, 0, $delimiter, $enclosure, $escape)) !== false) {
+			while(($data = $this->fgetcsv($handle)) !== false) {
 
 				$errors = [];
 				foreach ($data as $key => $value) {
@@ -190,6 +190,17 @@ class Validator {
 				$this->$method($config);
 			}
 		}
+	}
+
+	/**
+	 * Given a file pointer resource, return the next row from the file
+	 *
+	 * @access public
+	 * @param Resource $handle
+	 * @return array|null|false
+	 */
+	public function fgetcsv($handle){
+		return fgetcsv($handle, 0, $this->delimiter, $this->enclosure, $this->escape);
 	}
 
 	/**
