@@ -116,7 +116,7 @@ class Validator {
 
 			$columnCount = count($this->columnIndexes);
 
-			while(($data = fgetcsv($handle, 0, $delimiter)) !== false) {
+			while(($data = fgetcsv($handle, 0, $delimiter, $enclosure, $escape)) !== false) {
 
 				$errors = array();
 				foreach ($data as $key => $value) {
