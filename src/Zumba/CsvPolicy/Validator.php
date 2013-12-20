@@ -70,6 +70,14 @@ class Validator {
 	protected $rules = [];
 
 	/**
+	 * Numerically indexed array of classNames that map to the indexes of Validator::$rules
+	 *
+	 * @access protected
+	 * @var array
+	 */
+	protected $rulesMap = [];
+
+	/**
 	 * The location of the rule class files.
 	 *
 	 * This should be an absolute path to the directory containing your `CsvPolicy/Rule`
@@ -167,14 +175,21 @@ class Validator {
 	 * @access protected
 	 * @param array $params ['key' => ?, 'value' => ?]
 	 * @return void
+	 * @throws  \LogicException If a mapped rule does not exist
 	 */
 	protected function checkRule(array $params){
 		$value = trim($params['value']);
 		$key = $params['key'];
-		if(isset($this->rules[$key])) {
-			$rule = $this->rules[$key];
-		 	if (!$rule->validate($value)){
-				$this->errors[] = $rule->getErrorMessage($value);
+
+		if(isset($this->rulesMap[$key])) {
+			$className = $this->rulesMap[$key];
+			if (!empty($this->rules[$className])){
+				$rule = $this->rules[$className];
+			 	if (!$rule->validate($value)){
+					$this->errors[] = $rule->getErrorMessage($value);
+				}
+			} else {
+				throw new \LogicException($className . ' Rule was mapped, but not loaded.');
 			}
 		}
 	}
@@ -248,19 +263,31 @@ class Validator {
 	}
 
 	/**
-	 * Instantiates and loads a single rule into the Validator::$rules array
+	 * Loads a single rule into the Validator::$rules array
 	 *
-	 * @access protected
-	 * @param int $key
-	 * @param string $Rule A fully qualified class name
-	 * @return void
+	 * @access public
+	 * @param int $columnIndex  Zero based
+	 * @param string $className Class name without namespace
+	 * @param mixed $Rule       A fully qualified class name, or an instance that
+	 *                          extends \Zumba\CsvPolicy\Rule\AbstractRule
+	 * @return boolean
 	 */
-	protected function loadRule($key, $Rule){
-		if(class_exists($Rule)) {
-			$this->rules[$key] = new $Rule();
-		} else {
-			$this->errors[] = sprintf('Rule file found, but could not load rule class: "%s".', $Rule);
+	public function loadRule($columnIndex, $className, $Rule){
+		if (!isset($this->rules[$className])){
+			if (is_string($Rule)){
+				$this->makeRule($className, $Rule);
+			} elseif (is_object($Rule) && $Rule instanceof \Zumba\CsvPolicy\Rule\AbstractRule) {
+				$this->rules[$className] = $Rule;
+			} else {
+				$this->errors[] = "Validator::loadRule expected a fully qualified class name" .
+							      " or an instance of \\Zumba\\CsvPolicy\\Rule\\AbstractRule";
+			}
 		}
+		$noErrors = empty($this->errors);
+		if ($noErrors){
+			$this->rulesMap[$columnIndex] = $className;
+		}
+		return $noErrors;
 	}
 
 	/**
@@ -283,7 +310,7 @@ class Validator {
 			if (file_exists($filename)){
 				require_once $filename;
 				$Rule = str_replace('/', '\\', $relativePath);
-				$this->loadRule($key, $Rule);
+				$this->loadRule($key, $name, $Rule);
 			}
 			$this->columnIndexes[$key] = $value;
 		}
@@ -319,6 +346,22 @@ class Validator {
 				}
 			};
 			array_walk($or, $logOrError->bindTo($this));
+		}
+	}
+
+	/**
+	 * Create a rule from a fully qualified class name and push it onto Validator::rules
+	 *
+	 * @access protected
+	 * @param string $className
+	 * @param string $NameSpacedClass
+	 * @return void
+	 */
+	protected function makeRule($className, $NameSpacedClass){
+		if (class_exists($NameSpacedClass)){
+			$this->rules[$className] = new $NameSpacedClass();
+		} else {
+			$this->errors[] = sprintf('Could not instantiate rule class: "%s".', $NameSpacedClass);
 		}
 	}
 
