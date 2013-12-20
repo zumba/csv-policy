@@ -56,4 +56,33 @@ class ValidatorTest extends TestCase {
 		$valid = $this->lib->isValid(FIXTURE_PATH . '/valid.csv');
 		$this->assertFalse($valid, 'Validator should fail if required fields are not present');
 	}
+
+	public function testLoadRuleAcceptsRuleInstances() {
+		$rule = $this->getMock('\\Zumba\\CsvPolicy\\Rule\\AbstractRule');
+		$rule->expects($this->atLeastOnce())->method('validate');
+
+		$this->assertTrue($this->lib->loadRule(1, 'ColumnTwo', $rule));
+		$this->lib->isValid(FIXTURE_PATH . '/valid.csv');
+	}
+
+	public function testLoadRuleAcceptsStringRuleNames(){
+		$validator = $this->getMock('\\Zumba\\CsvPolicy\\Validator', array('makeRule'));
+		$once = $this->atLeastOnce();
+		$return = $this->returnValue(true);
+		$validator->expects($once)->method('makeRule')->will($return);
+
+		$className = '\\Zumba\\CsvPolicy\\Rule\\AbstractRule';
+		$this->assertTrue($validator->loadRule(1, 'ColumnTwo', $className));
+	}
+
+	public function testValidCsvWithRules(){
+		$this->lib->setRulesPath(RULES_PATH);
+		$this->assertTrue($this->lib->isValid(FIXTURE_PATH . '/valid_numbers.csv'));
+	}
+
+	public function testInvalidCsvWithRules(){
+		$this->lib->setRulesPath(RULES_PATH);
+		$this->assertFalse($this->lib->isValid(FIXTURE_PATH . '/invalid_numbers.csv'));
+		$this->assertEquals(1, count($this->lib->getErrors()));
+	}
 }
