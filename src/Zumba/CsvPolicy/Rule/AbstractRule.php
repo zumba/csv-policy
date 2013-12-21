@@ -17,6 +17,19 @@ abstract class AbstractRule {
 	protected $tokens = [];
 
 	/**
+	 * Get the error message regarding this rule
+	 *
+	 * Is passed the currently offending value
+	 *
+	 * @access public
+	 * @param $input string
+	 * @return string
+	 */
+	public function getErrorMessage($input) {
+		return $input . ' is invalid.';
+	}
+
+	/**
 	 * Returns the inputs that have been validated against
 	 *
 	 * @access public
@@ -30,19 +43,19 @@ abstract class AbstractRule {
 	/**
 	 * Checks if the input has been parsed before
 	 *
-	 * @access protected
+	 * @access public
 	 * @param mixed $input
 	 * @return boolean
 	 */
-	protected function isUnique($input){
+	public function isUnique($input){
 		$sumOccurrences = function($v, $n){
 			return $v + (int)($n === $this->scalar);
 		};
-		return array_reduce($this->tokens, $sumOccurrences->bindTo((object)$input), 0) === 1;
+		return array_reduce($this->tokens, $sumOccurrences->bindTo((object)$input), 0) <= 1;
 	}
 
 	/**
-	 * Store the input values
+	 * Store the input values and call the abstract validationLogic method
 	 *
 	 * @access public
 	 * @param mixed $input
@@ -50,18 +63,16 @@ abstract class AbstractRule {
 	 */
 	public function validate($input) {
 		$this->tokens[] = $input;
-		return true;
+		return $this->validationLogic($input);
 	}
 
 	/**
-	 * Get the error message regarding this rule
-	 *
-	 * Is passed the currently offending value
+	 * Implement to enforce validation logic for this rule.
 	 *
 	 * @abstract
 	 * @access public
-	 * @param $input string
-	 * @return string
+	 * @param mixed $input
+	 * @return boolean
 	 */
-	abstract public function getErrorMessage($input);
+	abstract public function validationLogic($input);
 }
