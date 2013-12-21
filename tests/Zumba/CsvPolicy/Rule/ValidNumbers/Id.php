@@ -16,6 +16,6 @@ class Id extends AbstractRule {
 	 * @return boolean
 	 */
 	public function validationLogic($input) {
-		return is_numeric($input) && $this->isUnique($input);
+		return $this->isUnique($input);
 	}
 }
