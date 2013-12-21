@@ -280,7 +280,7 @@ class Validator {
 				$this->rules[$className] = $Rule;
 			} else {
 				$this->errors[] = "Validator::loadRule expected a fully qualified class name" .
-							      " or an instance of \\Zumba\\CsvPolicy\\Rule\\AbstractRule";
+							      " or an instance of Zumba\\CsvPolicy\\Rule\\AbstractRule";
 			}
 		}
 		$noErrors = empty($this->errors);
