@@ -17,6 +17,20 @@ abstract class AbstractRule {
 	protected $tokens = [];
 
 	/**
+	 * Creates and increments a token key
+	 *
+	 * @access protected
+	 * @param string $input
+	 * @return void
+	 */
+	protected function addToken($input){
+		if (empty($this->tokens[$input])){
+			$this->tokens[$input] = 0;
+		}
+		$this->tokens[$input]++;
+	}
+
+	/**
 	 * Get the error message regarding this rule
 	 *
 	 * Is passed the currently offending value
@@ -37,7 +51,7 @@ abstract class AbstractRule {
 	 * @return array
 	 */
 	public function getTokens() {
-		return $this->tokens;
+		return array_keys($this->tokens);
 	}
 
 	/**
@@ -48,10 +62,7 @@ abstract class AbstractRule {
 	 * @return boolean
 	 */
 	public function isUnique($input){
-		$sumOccurrences = function($v, $n){
-			return $v + (int)($n === $this->scalar);
-		};
-		return array_reduce($this->tokens, $sumOccurrences->bindTo((object)$input), 0) <= 1;
+		return empty($this->tokens[$input]) || $this->tokens[$input] <= 1;
 	}
 
 	/**
@@ -62,7 +73,7 @@ abstract class AbstractRule {
 	 * @return boolean
 	 */
 	public function validate($input) {
-		$this->tokens[] = $input;
+		$this->addToken($input);
 		return $this->validationLogic($input);
 	}
 
