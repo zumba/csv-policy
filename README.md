@@ -1,6 +1,7 @@
 # CsvPolicy
 
-![travis-ci](https://api.travis-ci.org/zumba/csv-policy.png)
+[![Build Status](https://travis-ci.org/zumba/csv-policy.png)](https://travis-ci.org/zumba/csv-policy)
+
 
 **CsvPolicy** is a simple, policy-based validation library for CSV files.  Create rules for columns in a CSV file and the validator will load them, parse the file, and report rule violations.
 
