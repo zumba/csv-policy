@@ -1,7 +1,7 @@
 {
     "name": "zumba/csv-policy",
     "type": "library",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Simple, policy-driven csv rules validation",
     "keywords": ["csv", "validator", "policy", "csv-policy"],
     "homepage": "http://engineering.zumba.com",
@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.10",
+        "php": ">=5.4",
         "doctrine/inflector" : "~1.0"
     },
     "autoload": {

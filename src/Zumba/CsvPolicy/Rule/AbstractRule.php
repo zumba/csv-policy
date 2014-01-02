@@ -1,6 +1,11 @@
 <?php
 namespace Zumba\CsvPolicy\Rule;
 
+/**
+ * CsvPolicy AbstractRule Class
+ *
+ * @abstract
+ */
 abstract class AbstractRule {
 
 	/**
@@ -9,52 +14,76 @@ abstract class AbstractRule {
 	 * @access protected
 	 * @var array
 	 */
-    protected $tokens = array();
+	protected $tokens = [];
 
-    /**
-     * Returns the inputs that have been validated against
-     *
-     * @access public
-     * @param void
-     * @return array
-     */
-    public function getTokens() {
-        return $this->tokens;
-    }
-
-    /**
-     * Checks if the input has been parsed before
-     *
-     *
-     * @param mixed $input
-     * @return boolean
-     */
-	protected function isUnique($input){
-
-		// $input has already been stored in the tokens array, so we need to
-		// reduce it to ensure that there is only one occurance,
-		// instead of using something like array_unique, for eaxample.
-		return array_reduce($this->tokens, function($v, $n) use ($input) {
-			return $v + (int)($n === $input);
-		}, 0) === 1;
+	/**
+	 * Creates and increments a token key
+	 *
+	 * @access protected
+	 * @param string $input
+	 * @return void
+	 */
+	protected function addToken($input){
+		if (empty($this->tokens[$input])){
+			$this->tokens[$input] = 0;
+		}
+		$this->tokens[$input]++;
 	}
 
-    /**
-     * Store the input values
-     *
-     * @access public
-     * @param mixed $input
-     * @return void
-     */
-    public function validate($input) {
-        $this->tokens[] = $input;
-    }
+	/**
+	 * Get the error message regarding this rule
+	 *
+	 * Is passed the currently offending value
+	 *
+	 * @access public
+	 * @param $input string
+	 * @return string
+	 */
+	public function getErrorMessage($input) {
+		return $input . ' is invalid.';
+	}
 
-    /**
-     * Get the error message regarding this rule
-     *
-     * @param $input string
-     * @return string
-     */
-    abstract public function getErrorMessage($input);
+	/**
+	 * Returns the inputs that have been validated against
+	 *
+	 * @access public
+	 * @param void
+	 * @return array
+	 */
+	public function getTokens() {
+		return array_keys($this->tokens);
+	}
+
+	/**
+	 * Checks if the input has been parsed before
+	 *
+	 * @access public
+	 * @param mixed $input
+	 * @return boolean
+	 */
+	public function isUnique($input){
+		return empty($this->tokens[$input]) || $this->tokens[$input] <= 1;
+	}
+
+	/**
+	 * Store the input values and call the abstract validationLogic method
+	 *
+	 * @access public
+	 * @param mixed $input
+	 * @return boolean
+	 */
+	public function validate($input) {
+		$this->addToken($input);
+		return $this->validationLogic($input);
+	}
+
+	/**
+	 * Implement to enforce validation logic for this rule.
+	 *
+	 * @abstract
+	 * @access public
+	 * @param mixed $input
+	 * @return boolean
+	 */
+	abstract public function validationLogic($input);
 }
