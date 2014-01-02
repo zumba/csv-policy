@@ -1,7 +1,7 @@
 {
     "name": "zumba/csv-policy",
     "type": "library",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Simple, policy-driven csv rules validation",
     "keywords": ["csv", "validator", "policy", "csv-policy"],
     "homepage": "http://engineering.zumba.com",
