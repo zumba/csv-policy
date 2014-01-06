@@ -112,9 +112,6 @@ class Validator {
 	 */
 	protected function analyze($file){
 		$handle = fopen($file, 'r');
-		$delimiter = $this->delimiter;
-		$enclosure = $this->enclosure;
-		$escape = $this->escape;
 
 		//Parse the first row, instantiate all the validators
 		$row = $this->parseFirstRow($this->fgetcsv($handle));
@@ -158,7 +155,7 @@ class Validator {
 			count($row) < count($required) ||
 
 			// $or fields are required, but not present
-			(($orFieldsExist = !empty($or)) && !$this->orFieldsValid($or, $row)) ||
+			(!empty($or) && !$this->orFieldsValid($or, $row)) ||
 
 			// remaining fields are not present
 			count(array_intersect($and, $row)) !== count($and)
