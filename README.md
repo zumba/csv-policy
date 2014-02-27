@@ -17,27 +17,27 @@ Suppose you have the following business requirements for a CSV file named `produ
 
 CsvPolicy allows you to model these rules as classes.  Required and optional fields are handled by the `Validator` class directly, so we only need to define rules for the `id` column and the `value` column.
 
-The folowing rule will ensure that the values in the `id` field are unique:
+CsvPolicy uses Traits for common validation operations (e.g. checking all values in a column are unique).  The folowing rule will ensure that the values in the `id` field are unique:
 ```php
 namespace Zumba\CsvPolicy\Rule\Products;
 
-class Id extends \Zumba\CsvPolicy\Rule\AbstractRule {
-    public function getErrorMessage($input) {
-		return 'Id must be unique.  Duplicate found: ' . $input;
-	}
+use \Zumba\CsvPolicy\Behavior;
 
-	public function validationLogic($input) {
-		// AbstractRule::isUnique is a built-in checker that your rule can use
-		return $this->isUnique($input);
+class Id extends \Zumba\CsvPolicy\Rule {
+
+	use Unique;
+
+	public function getErrorMessage($input) {
+		return 'Id must be unique.  Duplicate found: ' . $input;
 	}
 }
 ```
 
-Implementing the `AbstractRule::validationLogic` method will define the policy for that column.  The validator will use this method to check all of the values in the CSV for the column.
+You can override the `Rule::validationLogic` method to define custom validation for that column.  The validator will use this method to check all of the values in the CSV for the column.
 ```php
 namespace Zumba\CsvPolicy\Rule\Products;
 
-class Value extends \Zumba\CsvPolicy\Rule\AbstractRule {
+class Value extends \Zumba\CsvPolicy\Rule {
 	public function getErrorMessage($input) {
 		return 'Value must only contain numeric values. Non-numeric value found: ' . $input;
 	}
@@ -64,7 +64,7 @@ $validator->config([
 
 $valid = $validator->isValid('./path/to/products.csv');
 if (!$valid){
-    // errors is an array of rules violations
+	// errors is an array of rules violations
 	$errors = $validator->getErrors();
 }
 ```
