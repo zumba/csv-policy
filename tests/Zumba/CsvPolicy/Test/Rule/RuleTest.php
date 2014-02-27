@@ -21,17 +21,6 @@ class RuleTest extends TestCase {
 		$this->assertEquals(['a', 'b', 'c'], $this->rule->getTokens());
 	}
 
-	public function testIsUnique(){
-		$this->assertTrue($this->rule->isUnique('a'));
-
-		$this->rule->validate('a');
-		$this->assertTrue($this->rule->isUnique('a'));
-
-		$this->rule->validate('a');
-		$this->assertFalse($this->rule->isUnique('a'));
-
-	}
-
 	public function testValidateCallsValidationLogic(){
 		$once = $this->atLeastOnce();
 		$return = $this->returnValue(true);

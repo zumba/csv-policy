@@ -29,6 +29,28 @@ class Rule {
 	}
 
 	/**
+	 * Loop through any behavior traits and executes them
+	 *
+	 * @access protected
+	 * @param mixed $input
+	 * @return boolean
+	 */
+	protected function behaviorLogic($input){
+		$valid = true;
+		$behaviors = class_uses($this);
+		if (!empty($behaviors)){
+			foreach($behaviors as $trait){
+				$method = $this->parseBehaviorMethod($trait);
+				$valid = $this->$method($input);
+				if (!$valid){
+					break;
+				}
+			}
+		}
+		return $valid;
+	}
+
+	/**
 	 * Get the error message regarding this rule
 	 *
 	 * Is passed the currently offending value
@@ -53,18 +75,26 @@ class Rule {
 	}
 
 	/**
-	 * Checks if the input has been parsed before
+	 * Returns a method name to call from the behavior
 	 *
-	 * @access public
-	 * @param mixed $input
-	 * @return boolean
+	 * @access protected
+	 * @param string $trait A fully qualified behavior trait string
+	 * @return string
+	 * @throws LogicException If a behavior doesn't have a method matching it's name
 	 */
-	public function isUnique($input){
-		return empty($this->tokens[$input]) || $this->tokens[$input] <= 1;
+	protected function parseBehaviorMethod($trait){
+		$parts = explode('\\', $trait);
+		$method = strtolower(array_pop($parts));
+		if (!method_exists($trait, $method)) {
+			throw new \LogicException("Behavior $trait does not have a method named $method");
+		}
+		return $method;
 	}
 
 	/**
-	 * Store the input values and call the abstract validationLogic method
+	 * Validate an input against the rule.
+	 *
+	 * Stores the input values as tokens, calls validationLogic, then validates against behaviors.
 	 *
 	 * @access public
 	 * @param mixed $input
@@ -72,7 +102,7 @@ class Rule {
 	 */
 	public function validate($input) {
 		$this->addToken($input);
-		return $this->validationLogic($input);
+		return $this->validationLogic($input) && $this->behaviorLogic($input);
 	}
 
 	/**
