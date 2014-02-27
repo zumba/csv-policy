@@ -7,12 +7,41 @@ namespace Zumba\CsvPolicy;
 class Rule {
 
 	/**
+	 * Numerically indexed list of behavior methods to call in behavior logic
+	 *
+	 * @access protected
+	 * @var array
+	 */
+	protected $behaviorMethods = [];
+
+	/**
+	 * Cached reflection object.
+	 *
+	 * Used in determining rule behaviors.
+	 *
+	 * @access protected
+	 * @var ReflectionClass
+	 */
+	protected $reflectionInstance;
+
+	/**
 	 * List of values handed to the rule
 	 *
 	 * @access protected
 	 * @var array
 	 */
 	protected $tokens = [];
+
+	/**
+	 * Rule constructor
+	 *
+	 * @access public
+	 * @param void
+	 * @constructor
+	 */
+	public function __construct(){
+		$this->parseBehaviorTraits();
+	}
 
 	/**
 	 * Creates and increments a token key
@@ -37,10 +66,9 @@ class Rule {
 	 */
 	protected function behaviorLogic($input){
 		$valid = true;
-		$behaviors = class_uses($this);
-		if (!empty($behaviors)){
-			foreach($behaviors as $trait){
-				$method = $this->parseBehaviorMethod($trait);
+		$methods = $this->behaviorMethods;
+		if (!empty($methods)){
+			foreach($methods as $method){
 				$valid = $this->$method($input);
 				if (!$valid){
 					break;
@@ -64,6 +92,32 @@ class Rule {
 	}
 
 	/**
+	 * Returns a reflection of the current rule
+	 *
+	 * @access protected
+	 * @param void
+	 * @return ReflectionClass
+	 */
+	protected function getReflection(){
+		if (empty($this->reflectionInstance)){
+			$this->reflectionInstance = new \ReflectionClass($this);
+		}
+		return $this->reflectionInstance;
+	}
+
+	/**
+	 * Returns the name of the method from a ReflectionMethod instance
+	 *
+	 * @access protected
+	 * @param ReflectionMethod $image
+	 * @return ReflectionClass
+	 * @see Zumba\CsvPolicy\Rule::parseBehaviorTraits
+	 */
+	protected function getReflectionMethodName(\ReflectionMethod $image){
+		return $image->name;
+	}
+
+	/**
 	 * Returns the inputs that have been validated against
 	 *
 	 * @access public
@@ -75,20 +129,23 @@ class Rule {
 	}
 
 	/**
-	 * Returns a method name to call from the behavior
+	 * Parses the rule for behavior traits and cahces the trait methods.
 	 *
 	 * @access protected
-	 * @param string $trait A fully qualified behavior trait string
-	 * @return string
-	 * @throws LogicException If a behavior doesn't have a method matching it's name
+	 * @param void
+	 * @return void
 	 */
-	protected function parseBehaviorMethod($trait){
-		$parts = explode('\\', $trait);
-		$method = strtolower(array_pop($parts));
-		if (!method_exists($trait, $method)) {
-			throw new \LogicException("Behavior $trait does not have a method named $method");
+	protected function parseBehaviorTraits(){
+		if (empty($this->behaviorMethods)){
+			$traits = $this->getReflection()->getTraits();
+			if (!empty($traits)){
+				$getName = [$this, 'getReflectionMethodName'];
+				foreach($traits as $reflection){
+					$methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
+					$this->behaviorMethods += array_map($getName, $methods);
+				}
+			}
 		}
-		return $method;
 	}
 
 	/**

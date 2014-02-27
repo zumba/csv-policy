@@ -13,7 +13,7 @@ trait Unique {
 	 * @param mixed $input
 	 * @return boolean
 	 */
-	public function unique($input){
+	public function csvPolicyIsUnique($input){
 		return empty($this->tokens[$input]) || $this->tokens[$input] <= 1;
 	}
 }

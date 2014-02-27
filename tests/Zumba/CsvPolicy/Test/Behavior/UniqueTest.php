@@ -21,16 +21,10 @@ class UniqueTest extends TestCase {
 	}
 
 	public function testIsUnique(){
-		// nothing has been validated yet, so it is unique
-		$this->assertTrue($this->rule->unique('a'));
-
 		// only one copy exists upon first validation
 		$this->assertTrue($this->rule->validate('a'));
 
 		// second validation fails
 		$this->assertFalse($this->rule->validate('a'));
-
-		// direct call now also reveals non-unique
-		$this->assertFalse($this->rule->unique('a'));
 	}
 }
