@@ -1,12 +1,10 @@
 <?php
-namespace Zumba\CsvPolicy\Rule;
+namespace Zumba\CsvPolicy;
 
 /**
- * CsvPolicy AbstractRule Class
- *
- * @abstract
+ * CsvPolicy Rule Class
  */
-abstract class AbstractRule {
+class Rule {
 
 	/**
 	 * List of values handed to the rule
@@ -78,12 +76,13 @@ abstract class AbstractRule {
 	}
 
 	/**
-	 * Implement to enforce validation logic for this rule.
+	 * Override to enforce validation logic for this rule.
 	 *
-	 * @abstract
 	 * @access public
 	 * @param mixed $input
 	 * @return boolean
 	 */
-	abstract public function validationLogic($input);
+	public function validationLogic($input) {
+		return true;
+	}
 }

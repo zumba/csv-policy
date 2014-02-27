@@ -1,12 +1,12 @@
 <?php
 namespace Zumba\CsvPolicy\Rule\InvalidNumbers;
 
-use \Zumba\CsvPolicy\Rule\AbstractRule;
+use \Zumba\CsvPolicy\Rule;
 
 /**
  * Id Rule class used in tests
  */
-class Id extends AbstractRule {
+class Id extends Rule {
 
 	/**
 	 * Verifies that id column is numeric and unique

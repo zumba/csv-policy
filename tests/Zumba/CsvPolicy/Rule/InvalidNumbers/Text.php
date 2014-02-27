@@ -1,12 +1,12 @@
 <?php
 namespace Zumba\CsvPolicy\Rule\InvalidNumbers;
 
-use \Zumba\CsvPolicy\Rule\AbstractRule;
+use \Zumba\CsvPolicy\Rule;
 
 /**
  * Text Rule class used in tests
  */
-class Text extends AbstractRule {
+class Text extends Rule {
 
 	/**
 	 * Verifies that text column is not empty

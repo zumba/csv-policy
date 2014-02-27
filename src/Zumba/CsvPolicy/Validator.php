@@ -266,18 +266,18 @@ class Validator {
 	 * @param int $columnIndex  Zero based
 	 * @param string $className Class name without namespace
 	 * @param mixed $Rule       A fully qualified class name, or an instance that
-	 *                          extends \Zumba\CsvPolicy\Rule\AbstractRule
+	 *                          extends Zumba\CsvPolicy\Rule
 	 * @return boolean
 	 */
 	public function loadRule($columnIndex, $className, $Rule){
 		if (!isset($this->rules[$className])){
 			if (is_string($Rule)){
 				$this->makeRule($className, $Rule);
-			} elseif (is_object($Rule) && $Rule instanceof \Zumba\CsvPolicy\Rule\AbstractRule) {
+			} elseif (is_object($Rule) && $Rule instanceof \Zumba\CsvPolicy\Rule) {
 				$this->rules[$className] = $Rule;
 			} else {
 				$this->errors[] = "Validator::loadRule expected a fully qualified class name" .
-							      " or an instance of Zumba\\CsvPolicy\\Rule\\AbstractRule";
+							      " or an instance of Zumba\\CsvPolicy\\Rule";
 			}
 		}
 		$noErrors = empty($this->errors);

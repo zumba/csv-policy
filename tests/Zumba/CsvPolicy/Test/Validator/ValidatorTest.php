@@ -58,7 +58,7 @@ class ValidatorTest extends TestCase {
 	}
 
 	public function testLoadRuleAcceptsRuleInstances() {
-		$rule = $this->getMock('\\Zumba\\CsvPolicy\\Rule\\AbstractRule');
+		$rule = $this->getMock('\\Zumba\\CsvPolicy\\Rule');
 		$rule->expects($this->atLeastOnce())->method('validate');
 
 		$this->assertTrue($this->lib->loadRule(1, 'ColumnTwo', $rule));
@@ -71,7 +71,7 @@ class ValidatorTest extends TestCase {
 		$return = $this->returnValue(true);
 		$validator->expects($once)->method('makeRule')->will($return);
 
-		$className = '\\Zumba\\CsvPolicy\\Rule\\AbstractRule';
+		$className = '\\Zumba\\CsvPolicy\\Rule';
 		$this->assertTrue($validator->loadRule(1, 'ColumnTwo', $className));
 	}
 
