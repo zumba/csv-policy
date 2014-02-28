@@ -82,18 +82,6 @@ class Rule {
 	}
 
 	/**
-	 * Returns the name of the method from a ReflectionMethod instance
-	 *
-	 * @access protected
-	 * @param ReflectionMethod $image
-	 * @return ReflectionClass
-	 * @see Zumba\CsvPolicy\Rule::parseBehaviorTraits
-	 */
-	protected function getReflectionMethodName(\ReflectionMethod $image){
-		return $image->name;
-	}
-
-	/**
 	 * Returns the inputs that have been validated against
 	 *
 	 * @access public
@@ -115,7 +103,7 @@ class Rule {
 		if (empty($this->behaviorMethods)){
 			$traits = (new \ReflectionClass($this))->getTraits();
 			if (!empty($traits)){
-				$getName = [$this, 'getReflectionMethodName'];
+				$getName = function(\ReflectionMethod $image){ return $image->name; };
 				foreach($traits as $reflection){
 					$methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 					$this->behaviorMethods += array_map($getName, $methods);
