@@ -15,16 +15,6 @@ class Rule {
 	protected $behaviorMethods = [];
 
 	/**
-	 * Cached reflection object.
-	 *
-	 * Used in determining rule behaviors.
-	 *
-	 * @access protected
-	 * @var ReflectionClass
-	 */
-	protected $reflectionInstance;
-
-	/**
 	 * List of values handed to the rule
 	 *
 	 * @access protected
@@ -92,20 +82,6 @@ class Rule {
 	}
 
 	/**
-	 * Returns a reflection of the current rule
-	 *
-	 * @access protected
-	 * @param void
-	 * @return ReflectionClass
-	 */
-	protected function getReflection(){
-		if (empty($this->reflectionInstance)){
-			$this->reflectionInstance = new \ReflectionClass($this);
-		}
-		return $this->reflectionInstance;
-	}
-
-	/**
 	 * Returns the name of the method from a ReflectionMethod instance
 	 *
 	 * @access protected
@@ -137,7 +113,7 @@ class Rule {
 	 */
 	protected function parseBehaviorTraits(){
 		if (empty($this->behaviorMethods)){
-			$traits = $this->getReflection()->getTraits();
+			$traits = (new \ReflectionClass($this))->getTraits();
 			if (!empty($traits)){
 				$getName = [$this, 'getReflectionMethodName'];
 				foreach($traits as $reflection){
