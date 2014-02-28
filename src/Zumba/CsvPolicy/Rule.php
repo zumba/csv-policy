@@ -100,14 +100,12 @@ class Rule {
 	 * @return void
 	 */
 	protected function parseBehaviorTraits(){
-		if (empty($this->behaviorMethods)){
-			$traits = (new \ReflectionClass($this))->getTraits();
-			if (!empty($traits)){
-				$getName = function(\ReflectionMethod $image){ return $image->name; };
-				foreach($traits as $reflection){
-					$methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
-					$this->behaviorMethods += array_map($getName, $methods);
-				}
+		$traits = (new \ReflectionClass($this))->getTraits();
+		if (!empty($traits)){
+			$getName = function(\ReflectionMethod $image){ return $image->name; };
+			foreach($traits as $reflection){
+				$methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
+				$this->behaviorMethods += array_map($getName, $methods);
 			}
 		}
 	}
