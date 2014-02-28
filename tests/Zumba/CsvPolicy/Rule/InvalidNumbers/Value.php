@@ -1,12 +1,12 @@
 <?php
 namespace Zumba\CsvPolicy\Rule\InvalidNumbers;
 
-use \Zumba\CsvPolicy\Rule\AbstractRule;
+use \Zumba\CsvPolicy\Rule;
 
 /**
  * Value Rule class used in tests
  */
-class Value extends AbstractRule {
+class Value extends Rule {
 
 	/**
 	 * Verifies that value column is numeric

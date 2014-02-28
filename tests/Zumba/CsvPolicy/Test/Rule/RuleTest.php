@@ -1,16 +1,16 @@
 <?php
 
-namespace Zumba\CsvPolicy\Test\Rule\AbstractRuleTest;
+namespace Zumba\CsvPolicy\Test\Rule;
 
 use \Zumba\CsvPolicy\Test\TestCase;
 
 /**
  * @group rule
  */
-class AbstractRuleTest extends TestCase {
+class RuleTest extends TestCase {
 
 	public function setUp() {
-		$this->rule = $this->getMock('\\Zumba\\CsvPolicy\\Rule\\AbstractRule', array('validationLogic'));
+		$this->rule = $this->getMock('\\Zumba\\CsvPolicy\\Rule', array('validationLogic'));
 	}
 
 	public function testValidateMethodTracksTokens() {
@@ -19,17 +19,6 @@ class AbstractRuleTest extends TestCase {
 		$this->rule->validate('c');
 
 		$this->assertEquals(['a', 'b', 'c'], $this->rule->getTokens());
-	}
-
-	public function testIsUnique(){
-		$this->assertTrue($this->rule->isUnique('a'));
-
-		$this->rule->validate('a');
-		$this->assertTrue($this->rule->isUnique('a'));
-
-		$this->rule->validate('a');
-		$this->assertFalse($this->rule->isUnique('a'));
-
 	}
 
 	public function testValidateCallsValidationLogic(){
